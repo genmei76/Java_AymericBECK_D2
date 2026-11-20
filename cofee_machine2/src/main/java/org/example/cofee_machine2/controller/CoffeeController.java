@@ -5,6 +5,7 @@ import jdk.dynalink.linker.LinkerServices;
 import lombok.RequiredArgsConstructor;
 import org.example.cofee_machine2.dto.CoffeeCreateDto;
 import org.example.cofee_machine2.dto.CoffeeDto;
+import org.example.cofee_machine2.dto.CoffeeUpdateDto;
 import org.example.cofee_machine2.entity.Coffee;
 import org.example.cofee_machine2.repository.CoffeeRepository;
 import org.example.cofee_machine2.service.CoffeeService;
@@ -26,6 +27,16 @@ public class CoffeeController
     {
         return coffeeService.createCoffee(createCoffee);
     }
+
+
+    @PatchMapping("{id}")
+    ResponseEntity<CoffeeDto> patchCoffee(@RequestBody @Valid CoffeeUpdateDto updateDto, @PathVariable Long id)
+    {
+        return coffeeService.updateCoffee(updateDto, id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 
     @GetMapping
     List<CoffeeDto> coffees()

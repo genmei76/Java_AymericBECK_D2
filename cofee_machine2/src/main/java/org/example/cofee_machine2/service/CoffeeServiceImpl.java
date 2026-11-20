@@ -4,10 +4,12 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.example.cofee_machine2.dto.CoffeeCreateDto;
 import org.example.cofee_machine2.dto.CoffeeDto;
+import org.example.cofee_machine2.dto.CoffeeUpdateDto;
 import org.example.cofee_machine2.entity.Coffee;
 import org.example.cofee_machine2.mapper.CoffeeMapper;
 import org.example.cofee_machine2.repository.CoffeeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,8 +50,17 @@ public class CoffeeServiceImpl implements CoffeeService {
         return mapper.toDto(saved);
     }
 
+
     @Override
-    public CoffeeDto updateCoffee(CoffeeDto coffee) {
-        return null;
+    @Transactional
+    public Optional<CoffeeDto> updateCoffee(CoffeeUpdateDto coffee, Long id)
+    {
+        return coffeeRepository.findById(id).map( existing ->
+        {
+                 mapper.updateEntity(existing, coffee);
+                 return mapper.toDto(existing);
+        });
     }
+
+
 }
